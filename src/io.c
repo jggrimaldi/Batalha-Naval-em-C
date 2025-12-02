@@ -1,15 +1,16 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include "io.h"
-
+#include "board.h" // Necessário para CellState
 
 void io_read_line(const char *msg, char *buffer, int max_len) {
-printf("%s", msg);
-fgets(buffer, max_len, stdin);
-buffer[strcspn(buffer, "\n")] = '\0';
+    printf("%s", msg);
+    if (fgets(buffer, max_len, stdin) != NULL) {
+        buffer[strcspn(buffer, "\n")] = '\0';
+    }
 }
-
 
 int io_read_int(const char *msg) {
     char buf[32];
@@ -17,7 +18,7 @@ int io_read_int(const char *msg) {
     return atoi(buf);
 }
 
-
+// Assinatura corrigida (5 argumentos)
 int io_read_coord(const char *msg, int *row, int *col, int max_size, int max_cols) {
     char buffer[10];
     io_read_line(msg, buffer, sizeof(buffer));
@@ -40,18 +41,50 @@ int io_read_coord(const char *msg, int *row, int *col, int max_size, int max_col
     return 1;
 }
 
+void print_shots_map(const Board *b, int size) {
+    printf("  ");
+    for (int i = 0; i < size; i++) {
+        printf(" %c", 'A' + i);
+    }
+    printf("\n");
+    
+    for (int r = 0; r < size; r++) {
+        printf("%2d", r + 1);
+        for (int c = 0; c < size; c++) {
+            Cell cell = b->cells[r * size + c];
+            char symbol = ' ';
 
+            switch (cell.state) {
+                case CELL_HIT:
+                    symbol = 'X'; // Tiro acertado
+                    break;
+                case CELL_MISS:
+                    symbol = '#'; // Tiro errado (Água)
+                    break;
+                case CELL_WATER:
+                case CELL_SHIP:
+                default:
+                    symbol = '.'; // Desconhecido/Não atirado
+                    break;
+            }
+            printf(" %c", symbol);
+        }
+        printf("\n");
+    }
+}
+
+// A função original io_print não é utilizada no fluxo principal, mas é mantida por completude.
 void io_print(int *cells, int rows, int cols) {
-printf(" ");
-for (int c = 0; c < cols; c++) printf("%c ", 'A' + c);
-printf("\n");
+    printf(" ");
+    for (int c = 0; c < cols; c++) printf("%c ", 'A' + c);
+    printf("\n");
 
 
-for (int r = 0; r < rows; r++) {
-printf("%d ", r + 1);
-for (int c = 0; c < cols; c++) {
-printf("%d ", cells[r * cols + c]);
-}
-printf("\n");
-}
+    for (int r = 0; r < rows; r++) {
+        printf("%d ", r + 1);
+        for (int c = 0; c < cols; c++) {
+            printf("%d ", cells[r * cols + c]);
+        }
+        printf("\n");
+    }
 }

@@ -7,8 +7,7 @@
 #include "rnd.h"
 #include <stdbool.h>
 
-//ENUMS e STRUCTS para a Lógica de Tiro
-
+// ENUMS e STRUCTS para a Lógica de Tiro
 typedef enum {
     RESULT_HIT,
     RESULT_MISS,
@@ -22,8 +21,7 @@ typedef struct {
     bool is_sunk;
 } ShotResult;
 
-//Estruturas Principais
-
+// Estruturas Principais
 typedef struct {
     Board board;
     Board shots;
@@ -41,7 +39,6 @@ typedef struct {
     char placement_mode;
 } Game;
 
-
 // Inicialização e Configuração
 void init_game(Game *g);
 void config_game(Game *g);
@@ -56,7 +53,7 @@ bool check_win(const Fleet *fleet);
 void display_stats(const Game *g, const Player *winner);
 void free_game_memory(Game *g);
 
-// Assinatura da função de tiro (implementação em outro módulo)
+// Assinatura da função de tiro
 ShotResult fire_shot(Board *shots, Board *target_board, Fleet *target_fleet, int row, int col);
 
-#endif 
+#endif

@@ -17,6 +17,8 @@ typedef struct {
 
 void init_fleet(Fleet *f);
 void add_ship(Fleet *f, char *name, int length);
-void place_fleet_random(Fleet *f, Board *b);
+// Assinatura Corrigida: Adicionado 'size'
+void place_fleet_random(Fleet *f, Board *b, int size);
+void free_fleet_memory(Fleet *f);
 
 #endif
