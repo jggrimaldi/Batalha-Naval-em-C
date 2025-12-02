@@ -1,118 +1,83 @@
-🛳️ Batalha Naval em C
+# ⚓ Batalha Naval (Battleship)
 
-Projeto – Curso de Sistemas de Informação
-CESAR School
-Professor: João Victor Tinoco
+[![C Language](https://img.shields.io/badge/Language-C_11-blue.svg)](https://en.wikipedia.org/wiki/C_(programming_language))
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-📌 Visão Geral
+Este projeto implementa o clássico jogo Batalha Naval em um ambiente de linha de comando (CLI), focado na **modularização**, **gerenciamento explícito de memória**, e **programação estruturada em C**.
 
-Este projeto implementa o jogo Batalha Naval utilizando exclusivamente linguagem C e as bibliotecas padrão permitidas.
-O objetivo é exercitar structs, ponteiros, alocação dinâmica (malloc/realloc), modularização e controle de fluxo.
+---
 
-O jogo funciona totalmente no terminal (CLI) e permite posicionamento automático ou manual dos navios, além da alternância de turnos entre dois jogadores.
+## 🎯 Objetivo e Funcionalidades
 
-📁 Estrutura do Projeto
-/src
-    board.h
-    board.c
-    fleet.h
-    fleet.c
-    rnd.h
-    rnd.c
-    io.h
-    io.c
-    game.h
-    game.c
-    main.c
-Makefile
-README.md
+O projeto validou o domínio de conceitos essenciais de C, como `structs`, ponteiros, e alocação dinâmica (`malloc`/`realloc`/`free`).
 
-🔧 Módulos
-Módulo	Responsabilidade
-board.c / board.h	Gerencia o tabuleiro: inicialização, impressão e posicionamento aleatório.
-fleet.c / fleet.h	Gerencia a frota: criação dos navios, armazenamento e posicionamento.
-rnd.c / rnd.h	Geração de números aleatórios.
-io.c / io.h	Rotinas de entrada e saída no terminal (ler coordenadas, inteiros, strings).
-game.c / game.h	Loop principal do jogo, controle de turnos, regras e disparos.
-main.c	Ponto de entrada: menu inicial, configurações e chamada do jogo.
-🎮 Regras do Jogo
+* **Tabuleiro:** Configurável (padrão 10x10).
+* **Frota:** Implementação da frota padrão (1x5, 1x4, 2x3, 2x2).
+* **Visualização:** Símbolos de largura consistente para alinhamento CLI:
+    * `X`: Acerto.
+    * `O`: Navio Afundado (no mapa de tiros do atacante).
+    * `#`: Navio Afundado (no tabuleiro de navios do defensor).
+    * `.`: Tiro na Água (Miss).
 
-O tabuleiro padrão é 10×10, podendo ser configurado entre 6 e 26.
+---
 
-Frota mínima implementada:
+## 🛠️ Decisões de Design e Arquitetura
 
-1 Porta-aviões (5 células)
+O projeto seguiu o princípio da **separação de responsabilidades** e focou na gestão manual de memória.
 
-1 Encouraçado (4 células)
+### 1. Gerenciamento de Memória
 
-2 Cruzadores (3 células)
+* **Alocação Dinâmica:** O `Board` (tabuleiro) e a `Fleet` (frota) são alocados e dimensionados usando `malloc` e `realloc`.
+* **`free_game_memory()`:** Garante que toda a memória alocada (`b->cells`, `f->ships`) seja liberada (`free`) ao final do jogo, prevenindo *memory leaks*.
 
-2 Destroyers (2 células)
+### 2. Lógica de Combate
 
-Cada jogador:
+* **Rastreamento com `ship_id`:** O `ship_id` em cada célula permite que a função `fire_shot` rastreie o navio exato na `Fleet` para atualizar o contador de `hits`.
+* **`fire_shot` (Dupla Marcação):** Quando um navio afunda, a função `mark_ship_sunk` é chamada duas vezes: uma para o tabuleiro real (`target_board`) e outra para o mapa de tiros do atacante (`shots` board), garantindo a atualização visual de `X` para `O` em ambos os lados.
 
-Informa um apelido.
+---
 
-Recebe um tabuleiro.
+## 📁 Estrutura do Código
 
-Posiciona a frota manualmente ou automaticamente.
+| Módulo | Arquivos | Responsabilidade Principal |
+| :--- | :--- | :--- |
+| **Núcleo** | `main.c`, `game.c`, `game.h` | Fluxo de turnos, regras e estado global do jogo. |
+| **Tabuleiro** | `board.c`, `board.h` | Definição da estrutura `Board`, validação e posicionamento. |
+| **Frota** | `fleet.c`, `fleet.h` | Gerenciamento de navios, controle de acertos e afundamentos. |
+| **I/O** | `io.c`, `io.h` | Leitura de coordenadas, impressão formatada. |
 
-Atira informando coordenadas como B5.
+---
 
-Estados das células:
+## 🚀 Compilação e Execução
 
-~ água
+### Pré-requisitos
 
-# navio
+Você precisa ter o **GCC** (GNU Compiler Collection) e o **GNU Make** instalados.
 
-X acerto
+### 1. Compilação Padrão (Recomendado)
 
-. tiro errado
+Navegue até o diretório raiz e use o `make`:
 
-O jogo termina quando toda a frota de um jogador for destruída.
-
-▶️ Como Compilar e Executar
-
-Este projeto inclui um Makefile simplificado.
-
-Para compilar:
+```bash
 make
+```
 
-Para executar:
-./batalha
+### 2. Fallback: Compilação Manual (Se 'make' falhar)
 
-Para limpar arquivos .o e binário:
-make clean
+Se o make não funcionar, execute o comando gcc completo para linkar todos os arquivos:
 
-📦 Dependências
+```bash
+gcc -std=c11 -Wall -Wextra -pedantic main.c game.c board.c fleet.c io.c rnd.c -o battleship
+```
+### 3. Execução
 
-Apenas bibliotecas padrão permitidas:
+``` Bash
+./battleship
+```
 
-<stdio.h>
-
-<stdlib.h>
-
-<string.h>
-
-<ctype.h>
-
-<stdbool.h>
-
-<time.h>
-
-Não há dependências externas.
-
-🧠 Conceitos Aplicados
-
-✔ Uso de structs para modelar tabuleiros, navios, frotas e jogadores
-✔ Uso explícito de malloc, realloc e free
-✔ Modularização e separação de responsabilidades
-✔ Manipulação por ponteiros
-✔ Controle de fluxo (loops, menus, validações)
-✔ Leitura robusta de coordenadas e entradas do usuário
-
-👥 Equipe
-Integrante	Responsabilidade
-Bernardo	Board + Random
-JG	Fleet + Outro módulo
-Guilherme	Game / I/O / integração final
+## 👥 Equipe
+```md
+* João Guilherme Grimaldi 
+* Guilherme Agra
+* Bernardo Pedrosa   
+```
