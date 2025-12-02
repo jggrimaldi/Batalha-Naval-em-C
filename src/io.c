@@ -18,7 +18,6 @@ int io_read_int(const char *msg) {
     return atoi(buf);
 }
 
-// Assinatura corrigida (5 argumentos)
 int io_read_coord(const char *msg, int *row, int *col, int max_size, int max_cols) {
     char buffer[10];
     io_read_line(msg, buffer, sizeof(buffer));
@@ -40,40 +39,41 @@ int io_read_coord(const char *msg, int *row, int *col, int max_size, int max_col
 
     return 1;
 }
-
 void print_shots_map(const Board *b, int size) {
-    printf("  ");
+    printf("   "); 
     for (int i = 0; i < size; i++) {
-        printf(" %c", 'A' + i);
+        printf(" %c ", 'A' + i);
     }
     printf("\n");
     
     for (int r = 0; r < size; r++) {
-        printf("%2d", r + 1);
+        printf("%2d ", r + 1);
         for (int c = 0; c < size; c++) {
             Cell cell = b->cells[r * size + c];
-            char symbol = ' ';
+            char symbol = '.'; // Padrao: Água (Desconhecido)
 
             switch (cell.state) {
+                case CELL_SUNK: 
+                    symbol = '#'; // Afundado (Visualização do Atacante)
+                    break;
                 case CELL_HIT:
-                    symbol = 'X'; // Tiro acertado
+                    symbol = 'X'; // Acerto
                     break;
                 case CELL_MISS:
-                    symbol = '#'; // Tiro errado (Água)
+                    symbol = '~'; //Usa '~' para Tiro Errado/Miss
                     break;
                 case CELL_WATER:
                 case CELL_SHIP:
                 default:
-                    symbol = '.'; // Desconhecido/Não atirado
+                    symbol = '.'; //Água não atirada (Desconhecido)
                     break;
             }
-            printf(" %c", symbol);
+            printf(" %c ", symbol);
         }
         printf("\n");
     }
 }
 
-// A função original io_print não é utilizada no fluxo principal, mas é mantida por completude.
 void io_print(int *cells, int rows, int cols) {
     printf(" ");
     for (int c = 0; c < cols; c++) printf("%c ", 'A' + c);

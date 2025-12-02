@@ -5,7 +5,7 @@
 #include <stdlib.h> 
 
 // Estruturas fornecidas
-typedef enum { CELL_WATER, CELL_SHIP, CELL_HIT, CELL_MISS } CellState;
+typedef enum { CELL_WATER, CELL_SHIP, CELL_HIT, CELL_MISS, CELL_SUNK } CellState;
 
 typedef struct {
     CellState state;
@@ -17,10 +17,10 @@ typedef struct {
     Cell *cells; // malloc(rows * cols)
 } Board;
 
-// Assinaturas Corrigidas: recebem 'size'. print_board recebe 'const'.
 void init_board(Board *b, int size);
 void print_board(const Board *b, int size, bool show_ships);
 void free_board_memory(Board *b);
 void place_random_ship(Board *b, int ship_size, int ship_id);
+void mark_ship_sunk(Board *b, int ship_id);
 
 #endif

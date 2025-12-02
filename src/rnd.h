@@ -2,6 +2,6 @@
 #define RND_H
 
 void rnd_seed(void);
-int rnd_int(int min, int max); /* inclusive */
+int rnd_int(int min, int max); 
 
 #endif

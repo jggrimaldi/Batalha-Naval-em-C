@@ -219,7 +219,7 @@ ShotResult fire_shot(Board *shots, Board *target_board, Fleet *target_fleet, int
         target_cell->state = CELL_HIT;
         shot_cell->state = CELL_HIT;
 
-        // 4. Lógica de Frota: Encontrar o Navio, Registrar Hit e Verificar Afundamento
+        //Encontrar o Navio, Registrar Hit e Verificar Afundamento
         int ship_id = target_cell->ship_id;
         
         // Verificação de segurança, garantindo que o ID é válido (0 a count-1)
@@ -236,7 +236,10 @@ ShotResult fire_shot(Board *shots, Board *target_board, Fleet *target_fleet, int
             // Verifica Afundamento
             if (hit_ship->hits >= hit_ship->length) {
                 result.is_sunk = true;
+                mark_ship_sunk(target_board, ship_id);
+                mark_ship_sunk(shots, ship_id);
             }
+            
         }
         
     } else {
